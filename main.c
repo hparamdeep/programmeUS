@@ -76,7 +76,10 @@ uint32_t HAL_GetTick (void) {
   }
   return ++ticks;
 }
+osThreadID id_I2CthreadT; 
 
+osThreadDef (id_I2CthreadT, osPriorityNormal, 1, 0); //def de la tache 
+osThreadDef (id_I2CthreadR, osPriorityNormal, 1, 0); //def de la tache 
 
 
 #endif
@@ -98,7 +101,7 @@ static void SystemClock_Config(void);
 static void Error_Handler(void);
 
 
-void Init_I2C(void){       //Init
+void Init_I2C(void){       //initialiser le bus 
 	Driver_I2C1.Initialize(NULL);
 	Driver_I2C1.PowerControl(ARM_POWER_FULL);
 	Driver_I2C1.Control(	ARM_I2C_BUS_SPEED,				// 2nd argument = débit
@@ -140,18 +143,18 @@ void myI2C_callback(uint32_t obj_idx, uint32_t event)
 }
 
 void I2CthreadT (void const *argument) {
-    // Code à exécuter par le thread id_I2CthreadT
+    while(1){
+		//code de la tache a inserer 
+		}
 }
 
 void I2CthreadR (void const *argument) {
    uint8_t data_buf[8];
     osEvent evt;
-   
+   char distance; 
     while (1) {
         evt = osSignalWait(0x01, osWaitForever); // sommeil sur attente réception
-        Driver_I2C1.Receive(0x00, data_buf, 8); // 8 data max
-        // on traite les données reçues
-        ...
+        distance = read1byte(0x79,0x02); 
 }
 
 void write1byte(unsigned char composant, unsigned char registre, unsigned char valeur) //Ecriture I2C0
